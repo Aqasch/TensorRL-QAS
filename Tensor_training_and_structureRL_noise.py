@@ -2,11 +2,10 @@ import numpy as np
 import random
 import torch
 import sys
-import os
 import argparse
 import pathlib
 import copy
-from utils import get_config
+from environments.utils.utils import get_config
 from environments.environment_qulacs_noise import CircuitEnv
 import agents
 import time
@@ -172,19 +171,16 @@ def one_episode(episode_no, env, agent, episodes):
 
 def train(agent, env, episodes, seed, output_path,threshold):
     """Training loop"""
-    threshold_crossed = 0
     for e in range(episodes):
         
         one_episode(e, env, agent, episodes)
         
         if e %5==0 and e > 0:
             agent.saver.save_file()
-            # torch.save(agent.policy_net.state_dict(), f"{output_path}/thresh_{threshold}_{seed}_model.pth")
-            # torch.save(agent.optim.state_dict(), f"{output_path}/thresh_{threshold}_{seed}_optim.pth")
-            # torch.save( {i: a._asdict() for i,a in enumerate(agent.memory.memory)}, f"{output_path}/thresh_{threshold}_{seed}_replay_buffer.pth")
-        if env.error <= 0.0016:
-            threshold_crossed += 1
-            np.save( f'threshold_crossed', threshold_crossed )
+            torch.save(agent.policy_net.state_dict(), f"{output_path}/thresh_{threshold}_{seed}_model.pth")
+            torch.save(agent.optim.state_dict(), f"{output_path}/thresh_{threshold}_{seed}_optim.pth")
+            torch.save( {i: a._asdict() for i,a in enumerate(agent.memory.memory)}, f"{output_path}/thresh_{threshold}_{seed}_replay_buffer.pth")
+            
 
 def get_args(argv):
     parser = argparse.ArgumentParser()
@@ -203,21 +199,23 @@ if __name__ == '__main__':
 
     results_path ="results/"
     ids = [i for i, v in enumerate(args.config) if v == "_"]
-    print(args.config)
-    # results_path_to_reload = f'results/finalize/{args.config[:-2]}_{int(args.config[ids[-1]+1:])-1}/'
     results_path_to_reload = f'results/finalize/{args.config}/'
-    print(results_path_to_reload)
-    print(f"{results_path}{args.experiment_name}{args.config}")
-    pathlib.Path(f"{results_path}{args.experiment_name}{args.config}").mkdir(parents=True, exist_ok=True)
-    device = torch.device(f"cuda:{args.gpu_id}")
-    # device = torch.device(f"cpu:0")
-    
+    pathlib.Path(f"{results_path}{args.experiment_name}{args.config}").mkdir(parents=True, exist_ok=True)    
     conf = get_config(args.experiment_name, f'{args.config}.cfg')
+    print("Select device:")
+    print("0: CPU")
+    print("1: GPU (CUDA)")
+    choice = input("Enter 0 or 1: ").strip()
 
-    # print(args.config[ids[-1]+1:])
-    print(args.experiment_name, args.config)
-
-    # exit()
+    if choice == "1" and torch.cuda.is_available():
+        device = torch.device("cuda:0")
+        print("Using GPU (cuda:0)")
+    elif choice == "1" and not torch.cuda.is_available():
+        print("CUDA is not available. Falling back to CPU.")
+        device = torch.device("cpu")
+    else:
+        device = torch.device("cpu")
+        print("Using CPU")
 
     loss_dict, scores_dict, test_scores_dict, actions_dict = dict(), dict(), dict(), dict()
     torch.backends.cudnn.deterministic = True
@@ -255,6 +253,5 @@ if __name__ == '__main__':
 
     train(agent, environment, conf['general']['episodes'], args.seed, f"{results_path}{args.experiment_name}{args.config}",conf['env']['accept_err'])
     agent.saver.save_file()
-            
-    # torch.save(agent.policy_net.state_dict(), f"{results_path}{args.experiment_name}{args.config}/thresh_{conf['env']['accept_err']}_{args.seed}_model.pth")
-    # torch.save(agent.optim.state_dict(), f"{results_path}{args.experiment_name}{args.config}/thresh_{conf['env']['accept_err']}_{args.seed}_optim.pth")
+    torch.save(agent.policy_net.state_dict(), f"{results_path}{args.experiment_name}{args.config}/thresh_{conf['env']['accept_err']}_{args.seed}_model.pth")
+    torch.save(agent.optim.state_dict(), f"{results_path}{args.experiment_name}{args.config}/thresh_{conf['env']['accept_err']}_{args.seed}_optim.pth")

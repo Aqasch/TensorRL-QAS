@@ -75,11 +75,6 @@ molecule = qml.qchem.Molecule(
     basis_name="sto-3g",
 )
 
-# print(molecule.__dict__.keys())
-# print(molecule.__dict__.keys())
-
-# exit()
-
 
 # Generate the molecular Hamiltonian
 if mol == 'H2O':
@@ -101,72 +96,20 @@ else:
         active_orbitals=active_orbitals)
 
 
-# print(qubits)
-# exit()
-
 ham = {qml.pauli.pauli_word_to_string(k, wire_map=hamiltonian.wires): v for k, v in zip(hamiltonian.ops, hamiltonian.coeffs)}
-# paulis = hamiltonian.ops
-# weights = hamiltonian.coeffs
-
 paulis_string = list(ham.keys())
 mod_weights = list(ham.values())
 
-# print(paulis)
-
-# exit()
-
-# def pauli_to_string(pauli_list, n_qubits):
-#     def process_pauli(pauli):
-#         if len(str(pauli)) > 3:
-#             # print(pauli, 'here')
-#             pauli = str(pauli)
-#             result = ['I'] * n_qubits
-#             terms = pauli.split('@')
-#             for term in terms:
-#                 term = term.strip()
-#                 if term:
-#                     op, pos = term[0], int(term[2:-1])
-#                     result[pos] = op
-#             return ''.join(result)
-#         else:
-#             pauli = 'I(0)'
-#             result = ['I'] * n_qubits
-#             terms = pauli.split('@')
-#             for term in terms:
-#                 term = term.strip()
-#                 if term:
-#                     op, pos = term[0], int(term[2:-1])
-#                     result[pos] = op
-#             return ''.join(result)
-
-#     return [process_pauli(pauli) for pauli in pauli_list]
-
-
-# paulis_string = pauli_to_string(paulis, qubits)
-
 print("Paulis string:", paulis_string)
-
-# print(weights)
-
-# mod_weights = []
-# for w in weights:
-#     mod_weights.append(float(w))
-# print("Weights:", mod_weights)
-
-# # exit()
 
 complete_dict = dict()
 hamiltonian_mat = hamiltonian.matrix()
-print(hamiltonian_mat.shape)
 
 complete_dict['hamiltonian'] = hamiltonian_mat
 complete_dict['eigvals'] = la.eig(hamiltonian_mat)[0].real
 complete_dict['weights'] = mod_weights
 complete_dict['paulis'] = paulis_string
 complete_dict['energy_shift'] = 0
-
-# print(min(la.eig(hamiltonian_mat)[0].real), 'min energy (from pennylane)')
-
 
 reverse_pauli_str = [p[::-1] for p in paulis_string]
 
@@ -180,14 +123,8 @@ qiskit_mat_rev = SparsePauliOp(reverse_pauli_str,
 print(len(paulis_string), len(mod_weights))
 
 print(np.linalg.norm(hamiltonian_mat-qiskit_mat.to_matrix()))
-# print(np.linalg.norm(hamiltonian_mat-qiskit_mat_rev.to_matrix()))
-
-# print(qiskit_mat.to_matrix())
-# print(min(la.eig(qiskit_mat.to_matrix())[0].real), 'min energy (from qiskit)')
-
 print(min(la.eig(hamiltonian_mat)[0].real), min(la.eig(qiskit_mat.to_matrix())[0].real))
 
-# exit()
 
 if min(la.eig(hamiltonian_mat)[0].real) == min(la.eig(qiskit_mat.to_matrix())[0].real):
     print('HOORAY! Ekdom thik implementation hoyeche!!!')
@@ -201,9 +138,3 @@ with open(f'dmrg-to-qc/mol_data/{mol}_{qubits}q_geom_{geom_string}_jordan_wigner
     pickle.dump(complete_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 nnp.savez(f'dmrg-to-qc/mol_data/{mol}_{qubits}q_geom_{geom_string}_jordan_wigner', **complete_dict)
-
-
-
-# Print results
-# print(f"Qubit Hamiltonian: {hamiltonian}")
-# print(f"Number of qubits required: {qubits}")

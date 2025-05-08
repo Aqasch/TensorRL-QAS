@@ -1,12 +1,7 @@
 from qulacs import ParametricQuantumCircuit, QuantumState
-# from quri_parts.circuit import QuantumCircuit, ParametricQuantumCircuit, RX,RY,RZ,CNOT
 from qulacs.gate import CNOT
 from qulacs.gate import *
 import numpy as np
-
-# from quri_parts.core.state import quantum_state, apply_circuit
-# from quri_parts.qulacs.simulator import evaluate_state_to_vector
-# from qiskit.quantum_info import Operator
 
 class Parametric_Circuit:
     
@@ -70,7 +65,6 @@ def get_energy_qulacs(angles, observable,circuit, n_qubits, TN_state, n_shots,
     
     """
     
-    # print(circuit.get_parameter_count())
 
     parameter_count_qulacs = circuit.get_parameter_count()
     
@@ -86,18 +80,10 @@ def get_energy_qulacs(angles, observable,circuit, n_qubits, TN_state, n_shots,
 def get_exp_val(n_qubits,circuit,op,TN_state):
 
     state = QuantumState(n_qubits)
-    # print(state)
     state.load(TN_state)
-    # print(circuit)
-    # print(state.get_vector())
-    # exit()
     circuit.update_quantum_state(state)
     psi = state.get_vector()
-    # print('-----------')
-    # print(psi)
     expval = (np.conj(psi).T @ op @ psi).real
-    # print(expval)
-    # exit()
     return expval
 
 if __name__ == "__main__":

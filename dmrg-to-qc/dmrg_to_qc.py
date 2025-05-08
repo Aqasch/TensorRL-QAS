@@ -10,6 +10,86 @@ from stiefel_opt import StiefelAdam
 from qiskit.quantum_info import Statevector, Operator
 from qiskit.converters import circuit_to_dag, dag_to_circuit
 
+def get_int_input(prompt, default):
+    """Get integer input with default fallback and error handling."""
+    try:
+        user_input = input(prompt).strip()
+        if not user_input:  # Empty input → use default
+            return default
+        return int(user_input)
+    except ValueError:
+        print(f"Invalid input. Using default: {default}")
+        return default
+
+def get_mol_config_and_hamiltonian(mol):
+    if mol == 'LIH_4q':
+        mol_config = "LIH_4q_geom_Li_.0_.0_.0;_H_.0_.0_3.4_parity"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'BEH2_6q':
+        mol_config = "BEH2_6q_geom_H_0.000_0.000_-1.330;_Be_0.000_0.000_0.000;_H_0.000_0.000_1.330_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'BEH2_12q':
+        mol_config = "BEH2_12q_geom_H_0.000,_0.000,_-1.330_Be_0.000,_0.000,_0.000_H_0.000,_0.000,_1.330_jordan_wigner"
+        hamiltonian_data = 'mol_data/BEH2_12q_geom_H_0.000,_0.000,_-1.330_Be_0.000,_0.000,_0.000_H_0.000,_0.000,_1.330_jordan_wigner.npz'
+    elif mol == 'H2O_8q':
+        mol_config = "H2O_8q_geom_H_-0.021_-0.002_0.000;_O_0.835_0.452_0.000;_H_1.477_-0.273_0.000_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'H2O_10q':
+        mol_config = "H2O_10q_geom_H_-0.021_-0.002_0.000;_O_0.835_0.452_0.000;_H_1.477_-0.273_0.000_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'H2O_12q':
+        mol_config = "H2O_12q_geom_H_-0.021_-0.002_0.000;_O_0.835_0.452_0.000;_H_1.477_-0.273_0.000_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'CH2_10q':
+        mol_config = "CH2_10q_geom_C_0.000_0.000_0.000;_H_1.080_0.000_0.000;_H_-0.225_1.056_0.000_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'CH2_10q_mod':
+        mol_config = "CH2_10q_geom_C_0.000_0.000_0.000;_H_1.080_0.000_0.000;_H_-0.225_1.056_0.000mod_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'CH2_8q':
+        mol_config = "CH2_8q_geom_C_0.000_0.000_0.000;_H_1.080_0.000_0.000;_H_-0.225_1.056_0.000_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'LIH_full':
+        mol_config = "LIH_12q_geom_Li_0.000_0.000_0.000;_H_0.000_0.000_3.400_jordan_wigner"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'heisenberg_12q':
+        mol_config = "heisenberg_12q"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'heisenberg_9q':
+        mol_config = "heisenberg_9q"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'heisenberg_5q':
+        mol_config = "heisenberg_5q"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    elif mol == 'TFIM_6q':
+        mol_config = "tfim_j1_h0.05_6q"
+        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    else:
+        mol_config = None
+        hamiltonian_data = None
+    return mol_config, hamiltonian_data
+
+def molecule_choice(mol_list):
+    print("Available molecules:")
+    for idx, name in enumerate(mol_list):
+        print(f"{idx}: {name}")
+    try:
+        user_input = int(input(f"Select a molecule (0-{len(mol_list)-1}): "))
+        if not (0 <= user_input < len(mol_list)):
+            print("Invalid input. Please enter a number within the valid range.")
+            return
+        mol = mol_list[user_input]
+        mol_config, hamiltonian_data = get_mol_config_and_hamiltonian(mol)
+        if mol_config is None:
+            print("Configuration not found for the selected molecule.")
+        else:
+            print(f"Selected molecule: {mol}")
+            print(f"mol_config: {mol_config}")
+            print(f"hamiltonian_data: {hamiltonian_data}")
+            return mol_config, hamiltonian_data
+    except ValueError:
+        print("Invalid input. Please enter an integer.")
+
 def trimmed_circuit(qc, max_depth):
     """
     Trim a quantum circuit to a maximum depth using its DAG representation.
@@ -143,66 +223,38 @@ def main(hamiltonian_path: str,
     return results
 
 if __name__ == '__main__':
-    mol_list = ['heisenberg_5q','LIH_4q', 'BEH2_6q', 'H2O_8q', 'H2O_12q', 'CH2_10q','CH2_10q_mod', 'H2O_10q', 'LIH_full', 'BEH2_12q', 'heisenberg_12q', 'heisenberg_9q', 'TFIM_6q', 'CH2_8q']
 
-    mol = mol_list[1]
+    # List of molecules
+    mol_list = [
+        'heisenberg_5q','LIH_4q', 'BEH2_6q', 'H2O_8q', 'H2O_12q', 'CH2_10q',
+        'CH2_10q_mod', 'H2O_10q', 'LIH_full', 'BEH2_12q', 'heisenberg_12q',
+        'heisenberg_9q', 'TFIM_6q', 'CH2_8q'
+    ]
+
+    mol_config, hamiltonian_data = molecule_choice(mol_list)
+
+    """
+    TO CHOOSE MORE EXPRESSIVE GATESET CONTAININ XX, YY, ZZ
+    """
     SU4 = 0
 
-    if mol == 'LIH_4q':
-        mol_config = "LIH_4q_geom_Li_.0_.0_.0;_H_.0_.0_3.4_parity"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'BEH2_6q':
-        mol_config = "BEH2_6q_geom_H_0.000_0.000_-1.330;_Be_0.000_0.000_0.000;_H_0.000_0.000_1.330_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'BEH2_12q':
-        mol_config = "BEH2_12q_geom_H_0.000,_0.000,_-1.330_Be_0.000,_0.000,_0.000_H_0.000,_0.000,_1.330_jordan_wigner"
-        hamiltonian_data = 'mol_data/BEH2_12q_geom_H_0.000,_0.000,_-1.330_Be_0.000,_0.000,_0.000_H_0.000,_0.000,_1.330_jordan_wigner.npz'
-    elif mol == 'H2O_8q':
-        mol_config = "H2O_8q_geom_H_-0.021_-0.002_0.000;_O_0.835_0.452_0.000;_H_1.477_-0.273_0.000_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'H2O_10q':
-        mol_config = "H2O_10q_geom_H_-0.021_-0.002_0.000;_O_0.835_0.452_0.000;_H_1.477_-0.273_0.000_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'H2O_12q':
-        mol_config = "H2O_12q_geom_H_-0.021_-0.002_0.000;_O_0.835_0.452_0.000;_H_1.477_-0.273_0.000_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'CH2_10q':
-        mol_config = "CH2_10q_geom_C_0.000_0.000_0.000;_H_1.080_0.000_0.000;_H_-0.225_1.056_0.000_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'CH2_10q_mod':
-        mol_config = "CH2_10q_geom_C_0.000_0.000_0.000;_H_1.080_0.000_0.000;_H_-0.225_1.056_0.000mod_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'CH2_8q':
-        mol_config = "CH2_8q_geom_C_0.000_0.000_0.000;_H_1.080_0.000_0.000;_H_-0.225_1.056_0.000_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'LIH_full':
-        mol_config = "LIH_12q_geom_Li_0.000_0.000_0.000;_H_0.000_0.000_3.400_jordan_wigner"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'heisenberg_12q':
-        mol_config = "heisenberg_12q"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'heisenberg_9q':
-        mol_config = "heisenberg_9q"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'heisenberg_5q':
-        mol_config = "heisenberg_5q"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
-    elif mol == 'TFIM_6q':
-        mol_config = "tfim_j1_h0.05_6q"
-        hamiltonian_data = f'mol_data/{mol_config}.npz'
+    """
+    DMRG OPT AND MPS --> PQC PARAMETERS
+    """
 
-    # print(hamiltonian_data)
-    # exit()
-
-    print('---------------------')
-    print(mol_config)
-    print('---------------------')
+    bond_dims = get_int_input("Choose bond dimension for DMRG (default 2): ", 2)
+    num_layers = get_int_input("Choose layers in PQC (default 1): ", 1)
+    print('-x-x-x-x-x-x-x-x-')
+    print(f'DMRG is genarating MPS with bond dimension {bond_dims}')
+    print(f'MPS is transformed into a PQC with layers {num_layers}')
+    print('-x-x-x-x-x-x-x-x-')
     print()
-    dmrg_opts = {'bond_dims': [2],
+
+    dmrg_opts = {'bond_dims': [bond_dims],
                  'num_sweeps': 2}
 
     qc_tn_ansatz = {'structure': 'brickwork',
-                    'num_layers': 1}
+                    'num_layers': num_layers}
 
     optimizer = StiefelAdam(learning_rate=3e-3,
                             beta1=0.9,
@@ -210,19 +262,22 @@ if __name__ == '__main__':
                             eps=1e-8)    
 
     optimizer_opts = {'method': optimizer,
-                      'maxiter': 1,
+                      'maxiter': 2000,
                       'tol': 1e-8}
     
     res = main(hamiltonian_data, dmrg_opts, qc_tn_ansatz, optimizer_opts, SU4)
 
     TN_init_circuit = res['qc']
-
-    # if mol_config == "tfim_j1_h0.05_6q":
-        # TN_init_circuit = trimmed_circuit(TN_init_circuit, 4)
+    """
+    MPS ->> PQC (drawing):
+    """
     print(TN_init_circuit)
-    print(TN_init_circuit.count_ops(), TN_init_circuit.depth())
-
-    # exit()
+    print('-------------')
+    print()
+    """
+    Resources in PQC:
+    """
+    print('Gates:', TN_init_circuit.count_ops(), 'Depth:', TN_init_circuit.depth())
 
 
 
@@ -231,8 +286,7 @@ if __name__ == '__main__':
     ham = data['hamiltonian']
     ham = Operator(ham).reverse_qargs().to_matrix()
     state = np.asmatrix(state)
-    energy = (state @ ham) @ state.getH()
-    print('THE OBTAINED ENERGY FROM (QISKIT) CIRCUIT: ', energy)
+    energy_qiskit = (state @ ham) @ state.getH()
     
     TNbond = dmrg_opts['bond_dims'][0]
     if SU4:
@@ -249,6 +303,15 @@ if __name__ == '__main__':
     state = Statevector(loaded_circuit)
     state = np.asmatrix(state)
     energy = (state @ ham) @ state.getH()
-    print('THE OBTAINED ENERGY FROM LOADED CIRCUIT: ', energy)
+    print()
+    print()
+    print('-X-X-X-X-X- SOME SANITY CHECK -X-X-X-X-X-')
+    print('THE OBTAINED ENERGY FROM (QISKIT) CIRCUIT: ', energy_qiskit.real)
+    print('THE OBTAINED ENERGY FROM LOADED CIRCUIT: ', energy.real)
+    # print(energy_qiskit.real - energy.real)
+    if np.abs(energy_qiskit.real - energy.real) <= 1e-6:
+        print('They are same! Everything is working as it is supposed to be!')
+    else:
+        print('Someting is not right!')
 
     

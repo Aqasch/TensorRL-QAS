@@ -1,19 +1,8 @@
-from qulacs import ParametricQuantumCircuit, QuantumState, DensityMatrix
-from qulacs.gate import CNOT
 from qulacs.gate import *
-
 import numpy as np
-from typing import List, Callable, Optional, Dict
-
-from scipy.optimize import OptimizeResult
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
-from qiskit_aer import AerSimulator
-from qiskit import QuantumCircuit, transpile
-from qiskit_qulacs import QulacsProvider
-from qiskit_aer import Aer
-# backend = QulacsProvider().get_backend('qulacs_simulator')
-simulator = AerSimulator(method='matrix_product_state')
+from qiskit import QuantumCircuit
 
 
 
@@ -83,9 +72,7 @@ def get_energy_qulacs(angles, observable,circuit, n_qubits, n_shots,
             list(i)[0].params = [angles[no]]
             no+=1
     
-    # result = backend.run(circuit).result()
     statevector = Statevector(circuit)
-    # statevector = result.get_statevector()
     state = np.asmatrix(statevector)
     energy = (state @ observable) @ state.getH()
 
@@ -93,25 +80,9 @@ def get_energy_qulacs(angles, observable,circuit, n_qubits, n_shots,
 
 def get_exp_val(n_qubits,circuit,op, phys_noise = False, err_mitig = 0):
 
-    # print('---------------')
-    # print(circuit)
-    # print('---------------')
-    
     statevector = Statevector(circuit)
-    # circuit.save_statevector(label='my_sv')
-    # circuit.save_matrix_product_state(label='my_mps')
-    # tcirc = transpile(circuit, simulator)
-    # result = simulator.run(tcirc).result()
-    # data = result.data(0)['my_mps']
-    # print(data[0])
-    # print(data[1])
-    # print(result.data(0))
-    # exit()
     state = np.asmatrix(statevector)
     energy = (state @ op) @ state.getH()
-    # print(energy)
-    # exit()
-
     return float(energy.real)
 
 

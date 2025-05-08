@@ -1,5 +1,4 @@
 from qulacs import ParametricQuantumCircuit, QuantumState
-# from environment_qulacs_su4 import RZZ, RYY, RXX
 from qulacs.gate import ParametricPauliRotation
 import numpy as np
 
