@@ -24,7 +24,7 @@ Use **TensorRL-QAS**.
 
 compared to **RL and non-RL based QAS** approaches. Moreover,
 
-✅ Pure **CPU based training** up to
+✅ Pure **CPU based training** up to 8-qubit
 
 ✅ **Easily scalable to large quantum systems**
 
