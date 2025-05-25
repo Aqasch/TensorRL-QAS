@@ -12,7 +12,7 @@ Use **TensorRL-QAS**.
 
 ![RLVTSP](image/tensorRL_QAS.png)
 
-## But why?
+## Why TensorRL-QAS?
 
 ✅ At least **10-fold** fewer CNOTs and circuit depth,
 
