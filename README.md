@@ -67,7 +67,7 @@ There are a total of two steps one need to follow to successfully execule **Tens
     ```
 
 
-    - To train QAS utilizing **TensorRL (fixed) on noiseless scenario** run the following:
+    - To train QAS utilizing **StructureRL on noiseless scenario** run the following:
     ```
     python3 Tensor_training_and_structureRL_noiseless.py --seed {seed} --config {config} --experiment_name "structureRL/"
     ```
