@@ -18,6 +18,7 @@ from qiskit import qpy
 from qiskit.converters import circuit_to_dag
 from qulacs import QuantumCircuit#, RX,RY,RZ,CNOT
 from qulacs.gate import RX,RY,RZ,CNOT
+from qiskit.quantum_info import Statevector, Operator
 # from 
 
 class CircuitEnv():
