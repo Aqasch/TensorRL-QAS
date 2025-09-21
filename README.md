@@ -1,6 +1,6 @@
 <div style="font-size: 20px;">
 
-# TensorRL-QAS
+# [TensorRL-QAS](https://openreview.net/forum?id=0okFLZvtKs&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DNeurIPS.cc%2F2025%2FConference%2FAuthors%23your-submissions))
 
 <h1 align="center">NeurIPS-2025</h1>
 
