@@ -2,7 +2,7 @@
 
 # TensorRL-QAS on [OpenReview](https://openreview.net/forum?id=0okFLZvtKs&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DNeurIPS.cc%2F2025%2FConference%2FAuthors%23your-submissions)) and on [arxiv](https://www.arxiv.org/abs/2505.09371)
 
-<h1 align="center">NeurIPS-2025</h1>
+<h1 align="center">NeurIPS 2025</h1>
 
 ## Problem statement
 Automate the finding of hardware-effecient quantum circuits representing the eigenstate with lowest energy of a given Hamiltonian.
