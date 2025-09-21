@@ -2,7 +2,9 @@
 
 # TensorRL-QAS
 
-## Scalable quantum architecture search (QAS) within reinforcement learning (RL) framework with tensor networks (TNs)
+                                                                           NeurIPS-2025
+
+## Improved and scalable up to 20-qubit quantum architecture search (QAS) within reinforcement learning (RL) framework with tensor networks (TNs)
 
 ## Problem statement
 Automate the finding of hardware-effecient quantum circuits representing the eigenstate with lowest energy of a given Hamiltonian.
