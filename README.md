@@ -94,7 +94,7 @@ Here we provide the source code for the baseline approaches we compare **TensorR
 
 
 ## The benchmark
-![RLVTSP](image/result1.png)
+![RLVTSP](image/updated_table_benchmark.png)
 
 ## 98% computation time reduction!
 ![RLVTSP](image/result2.png)
