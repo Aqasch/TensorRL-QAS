@@ -2,7 +2,7 @@
 
 # TensorRL-QAS
 
-                                                                           NeurIPS-2025
+                                                            ## NeurIPS-2025
 
 ## Improved and scalable up to 20-qubit quantum architecture search (QAS) within reinforcement learning (RL) framework with tensor networks (TNs)
 
