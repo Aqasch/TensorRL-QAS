@@ -4,8 +4,6 @@
 
 <h1 align="center">NeurIPS-2025</h1>
 
-## Improved and scalable up to 20-qubit quantum architecture search (QAS) within reinforcement learning (RL) framework with tensor networks (TNs)
-
 ## Problem statement
 Automate the finding of hardware-effecient quantum circuits representing the eigenstate with lowest energy of a given Hamiltonian.
 
@@ -28,7 +26,7 @@ compared to **RL and non-RL based QAS** approaches. Moreover,
 
 ✅ Pure **CPU based training** up to 8-qubit
 
-✅ **Easily scalable to large quantum systems**
+✅ **Easily scalable to large quantum systems (by far 20-qubit)**
 
 
 ## The dependencies
