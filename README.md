@@ -20,7 +20,7 @@ Use **TensorRL-QAS**.
 
 ✅ **2.4-fold** reduced depth under noise,
 
-✅ **Training stability** across random initialization of neural networks.
+✅ **Training stability** across random initialization of neural networks,
 
 compared to **RL and non-RL based QAS** approaches. Moreover,
 
