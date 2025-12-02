@@ -5,7 +5,7 @@
 <h1 align="center">NeurIPS 2025</h1>
 
 ## Problem statement
-Automate the finding of hardware-effecient quantum circuits representing the eigenstate with lowest energy of a given Hamiltonian.
+Automate the finding of hardware-efficient quantum circuits representing the lowest energy eigenstate of a given Hamiltonian and how to scale it.
 
 ## Solution
 Use **TensorRL-QAS**.
@@ -16,7 +16,7 @@ Use **TensorRL-QAS**.
 
 ✅ At least **10-fold** fewer CNOTs and circuit depth,
 
-✅ **98% training time reduction** per episdoe,
+✅ **98% training time reduction** per episode,
 
 ✅ **2.4-fold** reduced depth under noise,
 
